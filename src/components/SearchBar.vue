@@ -9,6 +9,8 @@ const rand = _.random(0, 1000)
 export default {
     data() {
         return {
+            // формируем массив с будущими ошибками
+            errors: [],
             // формируем объект нашей формы
             form: {
                 sources: [2],
@@ -26,6 +28,30 @@ export default {
     methods: {
         // определяем основные методы хранилища с которыми будем работать
         ...mapActions(['postData', 'getData']), // передаем нашу форму
+
+        // небольшой хелпер для валидации строк
+        unsuportedString(str) {
+            return !/^([a-zA-Z0-9 ,+.#-]+)$/.test(str)
+        },
+
+        // подготавливаем поля нашей формы и переопределяем их значение
+        prepareForm() {
+            // проверяем валидный ли строки
+            if (this.unsuportedString(this.form.keywords)) {
+                this.errors.push('Разрешено: , + . # -')
+
+                // прячем ошибку через 5 секунд
+                setTimeout(() => {
+                    this.errors = []
+                }, 5000)
+
+                // тормозимся если ошибка есть
+                return
+            }
+
+            // передаем наш объект в метод хранилища
+            this.postData(this.form)
+        },
 
         // изменяем выбранный индекс в поле формы
         setSources(index) {
@@ -45,10 +71,12 @@ export default {
 </script>
 
 <template>
-    <form :class="{ pending: pending }" v-on:submit.prevent="postData(form)">
-        <input type="text" v-model="form.keywords" name="keywords" placeholder="Технология, стек" />
+    <form :class="{ pending: pending }" v-on:submit.prevent="prepareForm()">
+        <input :class="{ error: errors[0] }" type="text" v-model="form.keywords" name="keywords" placeholder="React, Redux, GraphQL .." />
         <!-- блокируем поиск в состоянии ожидания и пустого значения -->
-        <button :class="{ pending: pending }" :disabled="pending || form.keywords.length < 2" type="submit">Найти предложения</button>
+        <button :class="{ pending: pending, error: errors[0] }" :disabled="pending || form.keywords.length < 2" type="submit">
+            {{ errors[0] ? errors[0] : 'Найти предложения' }}
+        </button>
 
         <ul>
             Искать в:
@@ -60,6 +88,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.error {
+    border-color: #c64949;
+}
+
 form {
     display: grid;
     grid-template-columns: 1fr 280px;
@@ -77,6 +109,9 @@ form {
 
     button {
         position: relative;
+        &.error {
+            background-color: #c64949;
+        }
         &.pending {
             background-color: var(--scheme-v2);
             color: var(--scheme-v2);

@@ -30,7 +30,7 @@ export default createStore({
     state: {
         data: [],
         pending: false, // состояние загрузки
-        browserHistory: storage.get('browserHistory') || false // состояние последнего сеанса
+        browserHistory: storage.get('browserHistory') || [] // состояние последнего сеанса
     },
 
     getters: {},

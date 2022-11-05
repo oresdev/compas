@@ -30,7 +30,7 @@ export default {
 <template>
     <section class="cards">
         <!-- меняем заголовок от состояния предыдущего сеанса -->
-        <h2 v-text="browserHistory ? 'Результаты поиска..' : 'Нет результатов..'" />
+        <h2 v-text="data.length > 0 ? 'Результаты поиска..' : 'Нет результатов..'" />
 
         <!-- формируем карточки -->
         <div v-if="data.length > 0" class="cards__items">
