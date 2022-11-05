@@ -1,8 +1,8 @@
 <script>
 export default {
-    // определяем параметры карточки и тип
+    // определяем параметры карточки
     props: {
-        article: {
+        data: {
             type: Object
         }
     }
@@ -11,17 +11,19 @@ export default {
 
 <template>
     <!-- изменяем поведение ссылки и ее основной тег -->
-    <router-link :to="{ name: 'article', params: { id: article.id } }" custom v-slot="{ navigate }">
-        <article class="card" v-on:click="navigate">
-            <h3>{{ article.title }}</h3>
-            <p>{{ article.article.slice(0, 260) }}...</p>
+    <router-link :to="{ name: 'article', params: { id: data.id } }" custom v-slot="{ navigate }">
+        <!-- т.е теперь вместо тега 'a href=""' останется article -->
+        <article v-on:click="navigate">
+            <h3>{{ data.title }}</h3>
+            <!-- обрезаем слишком длинную строку -->
+            <p>{{ data.article.slice(0, 260) }}...</p>
         </article>
     </router-link>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.card {
+article {
     background-color: var(--scheme-v5);
     transition: background 0.3s ease-in-out;
 

@@ -45,9 +45,10 @@ export default {
 </script>
 
 <template>
-    <form :class="{ pending: pending }" v-on:submit.prevent>
+    <form :class="{ pending: pending }" v-on:submit.prevent="postData(form)">
         <input type="text" v-model="form.keywords" name="keywords" placeholder="Технология, стек" />
-        <button :class="{ pending: pending }" v-on:click="postData(form)" :disabled="pending" type="submit">Найти предложения</button>
+        <!-- блокируем поиск в состоянии ожидания и пустого значения -->
+        <button :class="{ pending: pending }" :disabled="pending || form.keywords.length < 2" type="submit">Найти предложения</button>
 
         <ul>
             Искать в:

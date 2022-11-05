@@ -2,45 +2,31 @@
 // подтягиваем хранилише
 import { mapState, mapActions } from 'vuex'
 
+// подтягиваем фому редактирования
+import FormArticle from '../components/FormArticle.vue'
+
 export default {
     data() {
         return {
             // храним состояние редактора
-            editor: false,
-            // формируем объект нашей формы
-            form: {
-                article: '',
-                url: '',
-                title: '',
-                keyword: ''
-            }
+            editor: false
         }
+    },
+    components: {
+        FormArticle // регистрируем ту самую форму что подключали выше
     },
     methods: {
         // определяем основные методы хранилища с которыми будем работать
-        ...mapActions(['getArticle', 'patchData', 'deleteData']),
-
-        // подготавливаем поля нашей формы и переопределяем их значение
-        prepareArticle() {
-            this.form.article = this.data.article
-            this.form.url = this.data.url
-            this.form.title = this.data.title
-            this.form.keyword = this.data.keyword
-
-            // после отправки формы возвращаем состояние редактора по умолчанию
-            this.editor = false
-
-            // формируем новый объект и передаем его в метод хранилища
-            this.patchData({ id: this.data.id, data: this.form })
-        },
+        ...mapActions(['getArticle', 'deleteData']),
         deleteArticle() {
             // передаем идентификатор страницы в метод хранилища
             this.deleteData(this.data.id)
 
+            // закрываем страницу
             this.navigate()
         },
+        // просто прягаем назад
         navigate() {
-            // закрываем страницу
             this.$router.push({ path: '/' })
         }
     },
@@ -77,14 +63,9 @@ export default {
             {{ data.article }}
         </p>
 
-        <form v-on:submit.prevent v-if="editor">
-            <input v-model="data.title" name="title" type="text" />
-            <textarea v-model="data.article" name="article" rows="20"></textarea>
+        <FormArticle :data="data" v-on:editor="editor = !editor" v-if="editor" />
 
-            <button type="submit" v-on:click="prepareArticle()">Сохранить</button>
-        </form>
-
-        <button v-on:click="editor = !editor">Изменить</button>
+        <button v-on:click="editor = !editor" v-text="editor ? 'Отменить' : 'Изменить'"></button>
         <button v-on:click="deleteArticle()">Удалить</button>
     </section>
 </template>
@@ -138,35 +119,6 @@ button {
     @media only screen and (max-width: 660px) {
         margin: 0 auto 10px;
         width: 100%;
-    }
-}
-
-form {
-    background-color: var(--scheme-v5);
-    display: flex;
-    flex-direction: column;
-
-    margin: 40px 0;
-    padding: 20px;
-    position: relative;
-
-    input {
-        display: block;
-        padding: 20px 20px 0;
-    }
-
-    button {
-        margin: auto;
-    }
-
-    textarea {
-        background-color: transparent;
-        border: none;
-        outline: none;
-        font-size: 16px;
-        line-height: 1.7;
-        margin: 20px 0;
-        padding: 20px;
     }
 }
 </style>

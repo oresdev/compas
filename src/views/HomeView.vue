@@ -3,11 +3,11 @@
 import { mapState, mapActions } from 'vuex'
 
 // подтягиваем карточки
-import TheCard from '../components/TheCard.vue'
+import SectionCard from '../components/SectionCard.vue'
 
 export default {
     components: {
-        TheCard // регистрируем те самые карточки что подключали выше
+        SectionCard // регистрируем те самые карточки что подключали выше
     },
     computed: {
         // получаем состояние с массивом данных и ключ из локального хранилища
@@ -34,7 +34,7 @@ export default {
 
         <!-- формируем карточки -->
         <div v-if="data.length > 0" class="cards__items">
-            <TheCard v-for="item in data" :key="item.id" :article="item" />
+            <SectionCard v-for="item in data" :key="item.id" :data="item" />
         </div>
     </section>
 </template>

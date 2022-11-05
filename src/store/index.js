@@ -101,11 +101,11 @@ export default createStore({
         },
 
         // изменяем данные конкретного объявления
-        async patchData({ commit }, { id, data }) {
+        async patchData({ commit }, data) {
             // определяем площадку
             const sources = setSources(this.state.browserHistory.sources)
 
-            await axios.patch(`/api/${sources}/${id}/`, data)
+            await axios.patch(`/api/${sources}/${data.id}/`, data)
         },
 
         //
