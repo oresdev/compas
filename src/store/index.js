@@ -95,7 +95,7 @@ export default createStore({
             // определяем площадку
             const sources = setSources(this.state.browserHistory.sources)
 
-            await axios.get(`/api/${sources}/${id}`).then((response) => {
+            await axios.get(`/api/${sources}/${id}/`).then((response) => {
                 commit('responseData', response.data)
             })
         },
